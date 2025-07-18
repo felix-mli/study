@@ -1,0 +1,18 @@
+{
+    "name":"felix",
+    "age":30,
+    "gender":"male",
+    "hobbies":[
+        "reading",
+        "gaming",
+        "hiking",
+        123
+    ],
+    "address":{
+        "street":"123 Main St",
+        "city":"Springfield",
+        "state":"IL",
+        "zip":"62701"
+    },
+    "isEmployed":true
+}
