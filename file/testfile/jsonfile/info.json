@@ -14,5 +14,7 @@
         "state":"IL",
         "zip":"62701"
     },
-    "isEmployed":true
+    "isEmployed":true,
+    "married":false,
+    "children":null
 }

@@ -1,7 +1,7 @@
-aux_source_directory(src SOURCE)
+aux_source_directory(src SOURCES)
 
-add_library(base STATIC ${SOURCE})
+add_library(base STATIC ${SOURCES})
 
 target_include_directories(base
-    PUBLIC include
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
