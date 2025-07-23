@@ -8,7 +8,7 @@ add_library(my_math
 
 target_include_directories(my_math
     PUBLIC
-    ${CMAKE_SOURCE_DIR}/3rdparty/googletest/googletest/include
+    ${CMAKE_SOURCE_DIR}/3rdparty/googletest-1.17.0/googletest/include
 )
 
 add_executable(my_math_gtest

@@ -7,7 +7,7 @@ add_executable(cjson_demo
 
 target_include_directories(cjson_demo
     PUBLIC
-    ${CMAKE_SOURCE_DIR}/3rdparty/cJSON
+    ${CMAKE_SOURCE_DIR}/3rdparty/cJSON-1.7.18
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
