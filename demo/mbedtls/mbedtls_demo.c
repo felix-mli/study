@@ -89,9 +89,66 @@ void TestCBC(int argc, char *argv) {
     size_t padding_size = padded_len - plaintext_len;
     // 设置缓冲区
     unsigned char *padded_plaintext = malloc(padded_len);
+    if (padded_plaintext == NULL) {
+        printf("Memory allocation failed\n");
+        return;
+    }
+    memcpy(padded_plaintext, plaintext, plaintext_len);
+    for (size_t i = 0; i < padding_size; i++) {
+        padded_plaintext[plaintext_len + i] = padding_size;
+    }
+    printf("Padded plaintext: ");
+    for (size_t i = 0; i < padded_len; i++) {
+        printf("%02x ", padded_plaintext[i]);
+    }
+    printf("\n");
+
+    // 设置CBC模式的key
+    unsigned char key[BLOCK_SIZE] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                                     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+
+    // 设置CBC模式的IV
+    unsigned char iv[BLOCK_SIZE] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                                     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+    unsigned char ivEncrypt[BLOCK_SIZE];
+    unsigned char ivDecrypt[BLOCK_SIZE];
+    memcpy(ivEncrypt, iv, BLOCK_SIZE);
+    memcpy(ivDecrypt, iv, BLOCK_SIZE);
+
+    mbedtls_aes_context aes_ctx;
+    mbedtls_aes_init(&aes_ctx);
+
+    unsigned char *encryptText = malloc(padded_len);
+    mbedtls_aes_setkey_enc(&aes_ctx, key, 128);
+    mbedtls_aes_crypt_cbc(&aes_ctx, MBEDTLS_AES_ENCRYPT,
+                              padded_len, ivEncrypt, padded_plaintext, encryptText);
+    printf("Encrypted data: ");
+    for (size_t i = 0; i < padded_len; i++) {
+        printf("%02x ", encryptText[i]);
+    }
+    printf("\n");
+
+    mbedtls_aes_setkey_dec(&aes_ctx, key, 128);
+    mbedtls_aes_crypt_cbc(&aes_ctx, MBEDTLS_AES_DECRYPT,
+                              padded_len, ivDecrypt, encryptText, padded_plaintext);
+    printf("Decrypted data: ");
+    for (size_t i = 0; i < padded_len; i++) {
+        printf("%02x ", padded_plaintext[i]);
+    }
+    printf("\n");
+    size_t unpadded_len = padded_len - padded_plaintext[padded_len - 1];
+    printf("Unpadded decrypted data: ");
+    for (size_t i = 0; i < unpadded_len; i++) {
+        printf("%c", padded_plaintext[i]);
+    }
+    printf("\n");
+
+    free(padded_plaintext);
+    free(encryptText);
+    mbedtls_aes_free(&aes_ctx);
 }
 
 int main(int argc, char *argv[]) {
-    TestECB(argc, argv[0]);
+    TestCBC(argc, argv[0]);
     return 0;
 }
